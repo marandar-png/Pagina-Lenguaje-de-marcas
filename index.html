@@ -3,50 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Hundred Line - Last Defense Academy</title>
+    <title>Blue Lock</title>
+    <link rel="icon" type="image/png" href="bbll logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
+    <!-- Background Video -->
+    <video class="background-video" autoplay muted loop>
+        <source src="fondo.mp4" type="video/mp4">
+    </video>
+    
     <div class="grain-overlay"></div>
     
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">THE HUNDRED LINE</div>
-            <div class="menu-btn" id="menuBtn">MENU</div>
+            <div class="logo">
+                <span>BLUE LOCK</span>
+                <img src="bbll logo.png" alt="Blue Lock" class="logo-img">
+            </div>
+            <button class="menu-btn" id="menuBtn" type="button" aria-controls="mobileMenu" aria-expanded="false">MENU</button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#home">HOME</a>
-        <a href="#spec">SPEC</a>
-        <a href="#gallery">GALLERY</a>
-        <a href="#contact">CONTACT</a>
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <div class="mobile-menu__bg" aria-hidden="true">
+            <div class="mobile-menu__cover" id="menuCover"></div>
+        </div>
+        <div class="mobile-menu__content">
+            <a href="#home">HOME</a>
+            <a href="#spec">SPEC</a>
+            <a href="#characters">CHARACTERS</a>
+            <a href="#contact">CONTACT</a>
+            <a href="#" id="registerMenuLink" class="register-menu-link">REGISTER</a>
+        </div>
     </div>
+
+    <!-- User Registration Panel -->
+    <div class="registration-panel" id="registrationPanel">
+        <button class="registration-toggle" id="registrationToggle">✕</button>
+        <div class="registration-content">
+            <h4>REGISTER</h4>
+            <form id="registrationForm" class="registration-form">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="age" placeholder="Age" min="18" required>
+                </div>
+                <button type="submit" class="register-btn">SIGN UP</button>
+                <div id="registrationMessage" class="registration-message"></div>
+            </form>
+        </div>
+    </div>
+
+
 
     <main>
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="hero-content">
                 <div class="text-wrapper">
-                    <h1 class="reveal-text">THE HUNDRED LINE</h1>
+                    <h1 class="reveal-text">BLUE LOCK</h1>
                 </div>
                 <div class="text-wrapper">
-                    <h2 class="reveal-text secondary">Last Defense Academy</h2>
+                    <h2 class="reveal-text secondary">Ego's Evolution</h2>
                 </div>
                 <div class="red-line"></div>
-                <p class="description fade-in">Survive 100 days. The end of humanity begins here.</p>
+                <p class="description fade-in">Unlock your potential. Break the chains of your ego.</p>
             </div>
 
             <!-- Image Carousel -->
             <div class="carousel-container">
                 <div class="carousel-items">
-                    <img src="https://via.placeholder.com/800x600/1a1a1a/ff0044?text=Scene+1" alt="Scene 1" class="carousel-img active">
-                    <img src="https://via.placeholder.com/800x600/222/ff0044?text=Scene+2" alt="Scene 2" class="carousel-img">
-                    <img src="https://via.placeholder.com/800x600/2a2a2a/ff0044?text=Scene+3" alt="Scene 3" class="carousel-img">
+                    <img src="images/temp1.jpg" alt="Scene 1" class="carousel-img active">
+                    <img src="images/temp2.webp" alt="Scene 2" class="carousel-img">
+                    <img src="images/ep_nagi.webp" alt="Scene 3" class="carousel-img">
                 </div>
                 <div class="carousel-thumbnails">
                     <button class="thumb active" data-index="0"></button>
@@ -71,7 +113,7 @@
             <div class="spec-grid">
                 <div class="spec-item">
                     <h4>Title</h4>
-                    <p>The Hundred Line - Last Defense Academy</p>
+                    <p>Blue Lock</p>
                 </div>
                 <div class="spec-item">
                     <h4>Release Date</h4>
@@ -96,11 +138,40 @@
             </div>
         </section>
 
+        <section class="characters-section" id="characters">
+            <div class="characters-section__noise" aria-hidden="true"></div>
+            <div class="characters-inner">
+                <div class="characters-header">
+                    <p class="characters-eyebrow">BLUE LOCK ROSTER</p>
+                    <h3>CHARACTERS</h3>
+                </div>
+
+                <div class="characters-stage" id="charactersStage">
+                    <div class="characters-stage__bg" aria-hidden="true"></div>
+                    <div class="characters-cap">CHARACTERS</div>
+                    <div class="characters-pagination" id="charactersPagination" aria-live="polite"></div>
+
+                    <div class="characters-swiper swiper" id="charactersSwiper">
+                        <div class="swiper-wrapper" id="charactersTrack"></div>
+                    </div>
+
+                    <div class="characters-pager">
+                        <button class="characters-nav characters-nav--prev" id="characterPrev" type="button" aria-label="Previous character">
+                            <span class="characters-nav__icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="characters-nav characters-nav--next" id="characterNext" type="button" aria-label="Next character">
+                            <span class="characters-nav__icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Social Section -->
         <section class="social-section">
             <h3>SHARE</h3>
             <div class="social-buttons">
-                <a href="https://twitter.com/intent/tweet?text=The%20Hundred%20Line" class="social-btn twitter">𝕏</a>
+                <a href="https://twitter.com/intent/tweet?text=Blue%20Lock" class="social-btn twitter">𝕏</a>
                 <a href="https://www.facebook.com/sharer.php?u=#" class="social-btn facebook">f</a>
                 <a href="#" class="social-btn line">LINE</a>
             </div>
@@ -131,6 +202,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

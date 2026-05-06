@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Lock Character File</title>
+    <link rel="icon" type="image/png" href="bbll logo.png">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body class="character-detail-page">
+    <video class="background-video" autoplay muted loop playsinline preload="auto">
+        <source src="images/fondo.mp4" type="video/mp4">
+    </video>
+
+    <div class="grain-overlay"></div>
+
+    <nav class="navbar detail-navbar">
+        <div class="nav-container">
+            <a href="index.html#home" class="logo">
+                <span>BLUE LOCK</span>
+                <img src="bbll logo.png" alt="Blue Lock" class="logo-img">
+            </a>
+            <div class="detail-nav-actions">
+                <a href="index.html#characters" class="menu-btn detail-back-link">VOLVER</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="detail-main">
+        <div class="detail-shell" id="characterDetailApp"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html#characters">CHARACTERS</a>
+                <a href="index.html#spec">SPEC</a>
+                <a href="index.html#home">HOME</a>
+            </div>
+            <p class="copyright">© 2025 Media Vision Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="characters-data.js"></script>
+    <script src="character-detail.js"></script>
+</body>
+</html>

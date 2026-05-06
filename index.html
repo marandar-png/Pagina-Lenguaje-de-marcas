@@ -12,8 +12,8 @@
 </head>
 <body>
     <!-- Background Video -->
-    <video class="background-video" autoplay muted loop>
-        <source src="fondo.mp4" type="video/mp4">
+    <video class="background-video" autoplay muted loop playsinline preload="auto">
+        <source src="images/fondo.mp4" type="video/mp4">
     </video>
     
     <div class="grain-overlay"></div>
@@ -38,7 +38,6 @@
             <a href="#home">HOME</a>
             <a href="#spec">SPEC</a>
             <a href="#characters">CHARACTERS</a>
-            <a href="#contact">CONTACT</a>
             <a href="#" id="registerMenuLink" class="register-menu-link">REGISTER</a>
         </div>
     </div>
@@ -98,43 +97,45 @@
             </div>
         </section>
 
-        <!-- Platforms Section -->
-        <section class="platforms-section">
-            <h3>NOW AVAILABLE ON</h3>
-            <div class="platform-buttons">
-                <button class="platform-btn switch-btn" onclick="window.open('#')">🎮 NINTENDO SWITCH</button>
-                <button class="platform-btn steam-btn" onclick="window.open('#')">🖥️ STEAM</button>
-            </div>
-        </section>
-
+       
         <!-- Spec Section -->
         <section class="spec-section" id="spec">
-            <h3>GAME SPEC</h3>
+            <h3>Datos</h3>
             <div class="spec-grid">
                 <div class="spec-item">
-                    <h4>Title</h4>
+                    <h4>Titulo</h4>
                     <p>Blue Lock</p>
                 </div>
                 <div class="spec-item">
-                    <h4>Release Date</h4>
-                    <p>April 24, 2025</p>
+                    <h4>Fecha de salida (Manga)</h4>
+                    <p>1 de Agosto de 2018</p>
                 </div>
                 <div class="spec-item">
-                    <h4>Genre</h4>
-                    <p>Adventure / Visual Novel</p>
+                    <h4>Fecha de salida (anime)</h4>
+                    <p>9 de Octubre de 2022</p>
                 </div>
                 <div class="spec-item">
-                    <h4>Platform</h4>
-                    <p>Nintendo Switch / Steam</p>
+                    <h4>Donde ver</h4>
+                    <p>Crunchyroll/Prime video </p>
                 </div>
                 <div class="spec-item">
-                    <h4>Language</h4>
-                    <p>English, Japanese, Chinese</p>
+                    <h4>Idiomas</h4>
+                    <p>Japonés, Inglés, Español, Aleman , Indio , etc...</p>
                 </div>
                 <div class="spec-item">
-                    <h4>Developer</h4>
-                    <p>Media Vision Inc.</p>
+                    <h4>Produccion</h4>
+                    <p>8-bit</p>
                 </div>
+            </div>
+            <div class="synopsis-block">
+                <h4>Sinopsis</h4>
+                <p>
+                    Blue Lock sigue a Yoichi Isagi y a cientos de delanteros japoneses reunidos en un proyecto
+                    extremo creado para formar al atacante definitivo. Tras la decepcion del futbol japones en el
+                    escenario mundial, los jugadores compiten entre si en pruebas brutales donde solo los mas
+                    egoistas, talentosos y decisivos pueden sobrevivir. La serie mezcla tension psicologica,
+                    rivalidad y evolucion personal en una lucha constante por convertirse en el mejor delantero del mundo.
+                </p>
             </div>
         </section>
 
@@ -143,7 +144,10 @@
             <div class="characters-inner">
                 <div class="characters-header">
                     <p class="characters-eyebrow">BLUE LOCK ROSTER</p>
-                    <h3>CHARACTERS</h3>
+                    <div class="characters-heading-copy">
+                        <h3>CHARACTERS</h3>
+                        <p class="characters-subtitle">Haz click en cualquier personaje para abrir su ficha completa.</p>
+                    </div>
                 </div>
 
                 <div class="characters-stage" id="charactersStage">
@@ -166,17 +170,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Social Section -->
-        <section class="social-section">
-            <h3>SHARE</h3>
-            <div class="social-buttons">
-                <a href="https://twitter.com/intent/tweet?text=Blue%20Lock" class="social-btn twitter">𝕏</a>
-                <a href="https://www.facebook.com/sharer.php?u=#" class="social-btn facebook">f</a>
-                <a href="#" class="social-btn line">LINE</a>
-            </div>
-        </section>
-
         <!-- Age Verification -->
         <section class="age-check" id="ageModal">
             <div class="age-check-content">
@@ -203,6 +196,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="characters-data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+

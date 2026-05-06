@@ -31,12 +31,19 @@ window.addEventListener('load', () => {
 // ===== Menu Toggle =====
 const menuBtn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
+const menuBackground = document.querySelector('.mobile-menu__bg');
 const menuCover = document.getElementById('menuCover');
+const menuContent = document.querySelector('.mobile-menu__content');
 const menuLinks = Array.from(document.querySelectorAll('.mobile-menu a'));
+const compactMenuMedia = window.matchMedia('(max-width: 768px), (pointer: coarse)');
 let menuTimeline;
 let isMenuOpen = false;
 let isMenuAnimating = false;
 let menuInteractionLockedUntil = 0;
+
+function usesCompactMenuEffects() {
+    return compactMenuMedia.matches;
+}
 
 function isMenuInteractionLocked() {
     return Date.now() < menuInteractionLockedUntil;
@@ -50,14 +57,14 @@ function buildMenuCoverGrid() {
     if (!menuCover || menuCover.children.length > 0) return;
 
     const fragment = document.createDocumentFragment();
-    const columns = 10;
-    const rows = 15;
+    const columns = usesCompactMenuEffects() ? 6 : 10;
+    const rows = usesCompactMenuEffects() ? 9 : 15;
 
     for (let row = 0; row < rows; row += 1) {
         for (let col = 0; col < columns; col += 1) {
             const cell = document.createElement('span');
             cell.className = 'mobile-menu__cover-cell';
-            cell.style.setProperty('--delay', `${0.27 + row * 0.03}s`);
+            cell.style.setProperty('--delay', `${usesCompactMenuEffects() ? 0.08 + row * 0.018 : 0.2 + row * 0.025}s`);
             fragment.appendChild(cell);
         }
     }
@@ -94,27 +101,36 @@ function syncMenuButton() {
 }
 
 function resetMenuAnimatedState() {
+    gsap.set(menuBackground, { clearProps: 'opacity' });
+    gsap.set(menuContent, { clearProps: 'opacity,transform' });
     gsap.set('.mobile-menu a', { clearProps: 'opacity,transform' });
     gsap.set('.menu-link-char', { clearProps: 'opacity,transform' });
-    gsap.set(mobileMenu, { clearProps: 'clipPath,opacity,transform' });
+    gsap.set(mobileMenu, { clearProps: 'opacity,transform' });
 }
 
 function createMenuTransition(isOpening) {
     if (menuTimeline) menuTimeline.kill();
-    gsap.killTweensOf([mobileMenu, '.mobile-menu a', '.menu-link-char', menuBtn]);
+    gsap.killTweensOf([mobileMenu, menuBackground, menuContent, '.mobile-menu a', '.menu-link-char', menuBtn]);
+
+    const compactEffects = usesCompactMenuEffects();
 
     if (isOpening) {
         document.body.classList.add('menu-open');
         mobileMenu.classList.add('is-visible');
         mobileMenu.classList.remove('is-open');
+        mobileMenu.classList.toggle('is-compact', compactEffects);
 
         gsap.set(mobileMenu, {
-            yPercent: -4,
-            opacity: 0,
-            clipPath: 'inset(0 0 100% 0)'
+            yPercent: 0,
+            opacity: 1
         });
-        gsap.set('.mobile-menu a', { opacity: 0, x: 28 });
-        gsap.set('.menu-link-char', { opacity: 0, y: 20 });
+        gsap.set(menuBackground, { opacity: 0 });
+        gsap.set(menuContent, {
+            opacity: 1,
+            yPercent: compactEffects ? -1.5 : -2.5
+        });
+        gsap.set('.mobile-menu a', { opacity: 0, x: compactEffects ? 16 : 24 });
+        gsap.set('.menu-link-char', { opacity: 0, y: compactEffects ? 10 : 16 });
 
         menuTimeline = gsap.timeline({
             defaults: { ease: 'power3.out' },
@@ -125,45 +141,47 @@ function createMenuTransition(isOpening) {
 
         menuTimeline
             .to(menuBtn, {
-                letterSpacing: '4px',
-                duration: 0.3
-            }, 0)
-            .to(mobileMenu, {
-                yPercent: 0,
-                opacity: 1,
-                clipPath: 'inset(0 0 0 0%)',
-                duration: 0.55,
-                ease: 'expo.out'
+                letterSpacing: compactEffects ? '3px' : '4px',
+                duration: compactEffects ? 0.2 : 0.28
             }, 0)
             .call(() => {
                 mobileMenu.classList.add('is-open');
-            }, [], 0.08)
+            }, [], 0.02)
+            .to(menuBackground, {
+                opacity: 1,
+                duration: compactEffects ? 0.24 : 0.34,
+                ease: 'power2.out'
+            }, 0)
+            .to(menuContent, {
+                yPercent: 0,
+                duration: compactEffects ? 0.24 : 0.34,
+                ease: compactEffects ? 'power2.out' : 'expo.out'
+            }, 0)
             .fromTo('.mobile-menu a', {
                 opacity: 0,
-                x: 28
+                x: compactEffects ? 16 : 24
             }, {
                 opacity: 1,
                 x: 0,
-                stagger: 0.06,
-                duration: 0.5,
+                stagger: compactEffects ? 0.035 : 0.05,
+                duration: compactEffects ? 0.26 : 0.34,
                 ease: 'power3.out'
-            }, 0.2)
+            }, compactEffects ? 0.05 : 0.1)
             .to('.menu-link-char', {
                 opacity: 1,
                 y: 0,
-                stagger: 0.015,
-                duration: 0.34,
+                stagger: compactEffects ? 0.008 : 0.012,
+                duration: compactEffects ? 0.2 : 0.26,
                 ease: 'power3.out'
-            }, 0.26);
+            }, compactEffects ? 0.08 : 0.12);
 
         return;
     }
 
-    mobileMenu.classList.remove('is-open');
-
     menuTimeline = gsap.timeline({
         defaults: { ease: 'power2.inOut' },
         onComplete: () => {
+            mobileMenu.classList.remove('is-open');
             mobileMenu.classList.remove('is-visible');
             document.body.classList.remove('menu-open');
             resetMenuAnimatedState();
@@ -176,31 +194,39 @@ function createMenuTransition(isOpening) {
             opacity: 0,
             y: 12,
             stagger: {
-                each: 0.006,
+                each: compactEffects ? 0.004 : 0.006,
                 from: 'end'
             },
-            duration: 0.18
+            duration: compactEffects ? 0.12 : 0.18
         }, 0)
         .to('.mobile-menu a', {
             opacity: 0,
-            x: 24,
+            x: compactEffects ? 14 : 20,
             stagger: {
-                each: 0.03,
+                each: compactEffects ? 0.02 : 0.03,
                 from: 'end'
             },
-            duration: 0.18
+            duration: compactEffects ? 0.12 : 0.18
         }, 0)
+        .to(menuContent, {
+            yPercent: compactEffects ? -1.5 : -2.5,
+            duration: compactEffects ? 0.2 : 0.3,
+            ease: compactEffects ? 'power2.in' : 'expo.in'
+        }, 0.03)
         .to(menuBtn, {
             letterSpacing: '1px',
-            duration: 0.25
+            duration: compactEffects ? 0.18 : 0.25
         }, 0)
-        .to(mobileMenu, {
-            yPercent: -4,
+        .to(menuBackground, {
             opacity: 0,
-            clipPath: 'inset(0 0 100% 0)',
-            duration: 0.55,
-            ease: 'expo.in'
-        }, 0.08);
+            duration: compactEffects ? 0.2 : 0.3,
+            ease: compactEffects ? 'power2.in' : 'expo.in'
+        }, 0.03)
+        .to(mobileMenu, {
+            opacity: 0,
+            duration: compactEffects ? 0.18 : 0.26,
+            ease: 'power2.in'
+        }, 0.03);
 }
 
 function openMenu() {
@@ -364,108 +390,7 @@ const charactersStage = document.getElementById('charactersStage');
 const characterPrev = document.getElementById('characterPrev');
 const characterNext = document.getElementById('characterNext');
 const charactersPagination = document.getElementById('charactersPagination');
-
-const charactersData = [
-    {
-        name: "Yoichi Isagi",
-        role: "Spatial Striker",
-        catchLines: ["VISION BREAKS", "THE LOCK"],
-        voice: "JP Voice: Kazuki Ura",
-        image: "images/isagi.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Seishiro Nagi",
-        role: "Trap Genius",
-        catchLines: ["EFFORTLESS.", "DEADLY. COLD."],
-        voice: "JP Voice: Nobunaga Shimazaki",
-        image: "images/nagi.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Meguru Bachira",
-        role: "Dribble Monster",
-        catchLines: ["PLAY WITH THE", "MONSTER INSIDE"],
-        voice: "JP Voice: Tasuku Kaito",
-        image: "images/bachira.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Hyoma Chigiri",
-        role: "Speed Runner",
-        catchLines: ["BLAZING PAST", "EVERY DEFENDER"],
-        voice: "JP Voice: Soma Saito",
-        image: "images/chigiri.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Shoei Barou",
-        role: "King Striker",
-        catchLines: ["THE FIELD BOWS", "TO THE KING"],
-        voice: "JP Voice: Junichi Suwabe",
-        image: "images/baro.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Rin Itoshi",
-        role: "Precision Killer",
-        catchLines: ["EVERY ANGLE", "IS A WEAPON"],
-        voice: "JP Voice: Koki Uchiyama",
-        image: "images/rin.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Reo Mikage",
-        role: "Elite All-Rounder",
-        catchLines: ["PERFECT TALENT", "BUILDS CONTROL"],
-        voice: "JP Voice: Yuma Uchida",
-        image: "images/reo.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Hiori Yo",
-        role: "Creative Playmaker",
-        catchLines: ["THREAD THE PASS", "BREAK THE LINE"],
-        voice: "JP Voice: Natsuki Hanae",
-        image: "images/hiori.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Oliver Aiku",
-        role: "Iron Defender",
-        catchLines: ["READ THE GAME", "RULE THE BACKLINE"],
-        voice: "JP Voice: Satoshi Hino",
-        image: "images/aiku.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Ryusei Shidou",
-        role: "Chaos Finisher",
-        catchLines: ["WILD INSTINCT", "PURE EXPLOSION"],
-        voice: "JP Voice: Yuichi Nakamura",
-        image: "images/shidou.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    },
-    {
-        name: "Sae Itoshi",
-        role: "World Class Midfielder",
-        catchLines: ["VISION SETS", "THE WHOLE GAME"],
-        voice: "JP Voice: Takahiro Sakurai",
-        image: "images/sae.webp",
-        basePosition: "center top",
-        visualPosition: "center top"
-    }
-];
+const charactersData = Array.isArray(window.charactersData) ? window.charactersData : [];
 
 let charactersSwiperInstance;
 
@@ -494,12 +419,18 @@ function buildAnimatedLines(lines, lineClass, wordClass) {
     `).join('');
 }
 
+function buildCharacterDetailUrl(character) {
+    return `personaje.html?personaje=${encodeURIComponent(character.slug)}`;
+}
+
 function buildCharacterSlide(character, index) {
     const nameLines = character.name.toUpperCase().split(' ');
+    const accent = character.accent || '#2f8fff';
+    const detailUrl = buildCharacterDetailUrl(character);
 
     return `
         <div class="swiper-slide" data-character-index="${index}">
-            <article class="character-slide" aria-label="${character.name}">
+            <article class="character-slide" aria-label="${character.name}" style="--character-accent:${accent};">
                 <div class="character-slide__base-shell">
                     <span class="character-slide__frame" aria-hidden="true"></span>
                     <div class="character-slide__base">
@@ -542,8 +473,10 @@ function buildCharacterSlide(character, index) {
                         <p class="character-slide__voice">
                             ${buildAnimatedCharacters(character.voice.toUpperCase(), 'character-slide__voice-word')}
                         </p>
+                        <span class="character-slide__cta">OPEN FILE</span>
                     </div>
                 </div>
+                <a class="character-slide__link" href="${detailUrl}" aria-label="Abrir la ficha de ${character.name}"></a>
             </article>
         </div>
     `;
@@ -569,12 +502,51 @@ function syncCharactersState(swiper) {
     updateCharactersPagination(swiper.realIndex);
 }
 
+function clearCharacterTargetState(swiper) {
+    if (!swiper || !swiper.slides) return;
+
+    Array.from(swiper.slides).forEach((slide) => {
+        slide.classList.remove('is-target');
+    });
+}
+
+function clearCharacterEnteringState(swiper) {
+    if (!swiper || !swiper.slides) return;
+
+    Array.from(swiper.slides).forEach((slide) => {
+        slide.classList.remove('is-entering-target');
+    });
+}
+
+function setCharacterTargetState(swiper) {
+    if (!swiper || !swiper.slides) return;
+
+    clearCharacterTargetState(swiper);
+
+    const targetSlide = swiper.slides[swiper.activeIndex];
+    if (targetSlide) {
+        targetSlide.classList.add('is-target');
+    }
+}
+
+function setCharacterEnteringState(swiper) {
+    if (!swiper || !swiper.slides) return;
+
+    clearCharacterEnteringState(swiper);
+
+    const enteringSlide = swiper.slides[swiper.activeIndex];
+    if (enteringSlide) {
+        enteringSlide.classList.add('is-entering-target');
+    }
+}
+
 function renderCharactersSection() {
     if (
         !charactersTrack ||
         !charactersSwiperElement ||
         !characterPrev ||
         !characterNext ||
+        charactersData.length === 0 ||
         typeof Swiper === 'undefined'
     ) {
         return;
@@ -583,7 +555,7 @@ function renderCharactersSection() {
     charactersTrack.innerHTML = charactersData.map(buildCharacterSlide).join('');
 
     charactersSwiperInstance = new Swiper(charactersSwiperElement, {
-        speed: 700,
+        speed: 350,
         slidesPerView: 2,
         spaceBetween: 0,
         loop: charactersData.length > 1,
@@ -609,22 +581,17 @@ function renderCharactersSection() {
         on: {
             init(swiper) {
                 syncCharactersState(swiper);
+                setCharacterTargetState(swiper);
             },
             slideChangeTransitionStart(swiper) {
                 syncCharactersState(swiper);
+                clearCharacterTargetState(swiper);
+                setCharacterEnteringState(swiper);
+            },
+            slideChangeTransitionEnd(swiper) {
+                clearCharacterEnteringState(swiper);
+                setCharacterTargetState(swiper);
             }
-        }
-    });
-
-    charactersTrack.addEventListener('click', (event) => {
-        const slide = event.target.closest('.swiper-slide');
-        if (!slide || !charactersSwiperInstance) return;
-
-        const targetIndex = Number(slide.dataset.characterIndex);
-        if (Number.isNaN(targetIndex)) return;
-
-        if (charactersSwiperInstance.realIndex !== targetIndex) {
-            charactersSwiperInstance.slideToLoop(targetIndex);
         }
     });
 

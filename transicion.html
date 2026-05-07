@@ -5,61 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cargando...</title>
     <style>
-        /* Estilos para centrar todo */
-        body, html {
+        :root {
+            --bg-dark: #06101f;
+            --bg-light: #0b2546;
+            --accent: #41b8ff;
+            --glow: rgba(65, 184, 255, 0.38);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             margin: 0;
-            padding: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #121212; /* Color de fondo oscuro */
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            overflow: hidden;
             font-family: Arial, sans-serif;
             color: white;
-            overflow: hidden;
+            background:
+                radial-gradient(circle at top, rgba(65, 184, 255, 0.12), transparent 35%),
+                linear-gradient(180deg, var(--bg-light), var(--bg-dark));
         }
 
         .loader-container {
+            display: grid;
+            gap: 1.5rem;
+            justify-items: center;
             text-align: center;
         }
 
-        /* El círculo de carga */
-        .loader {
-            border: 8px solid #333;
-            border-top: 8px solid #3498db; /* Color principal */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        .logo-loader {
+            position: relative;
+            width: min(44vw, 240px);
+            aspect-ratio: 1;
+            filter: drop-shadow(0 0 24px var(--glow));
         }
 
-        /* Animación de rotación */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .logo-loader img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .logo-loader__base {
+            opacity: 0.24;
+        }
+
+        .logo-loader__fill-wrap {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            animation: fillLogo 2.6s ease-in-out forwards;
+        }
+
+        .logo-loader__fill {
+            opacity: 0.95;
+            filter:
+                drop-shadow(0 0 12px rgba(65, 184, 255, 0.42))
+                saturate(1.15);
+        }
+
+        .logo-loader__shine {
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            bottom: 0;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
+            animation: shineRise 2.6s ease-in-out forwards;
         }
 
         h2 {
-            font-weight: 300;
-            letter-spacing: 2px;
+            margin: 0;
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.45rem;
+            text-transform: uppercase;
+        }
+
+        .loading-bar {
+            width: min(58vw, 280px);
+            height: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+        }
+
+        .loading-bar span {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform-origin: left center;
+            transform: scaleX(0);
+            background: linear-gradient(90deg, #1d73ff, #75d8ff);
+            box-shadow: 0 0 16px rgba(65, 184, 255, 0.5);
+            animation: fillBar 2.6s ease-in-out forwards;
+        }
+
+        @keyframes fillLogo {
+            0% {
+                clip-path: inset(100% 0 0 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes shineRise {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-220px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fillBar {
+            0% {
+                transform: scaleX(0);
+            }
+            100% {
+                transform: scaleX(1);
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="loader-container">
-        <div class="loader"></div>
-        <h2>CARGANDO</h2>
+        <div class="logo-loader" aria-hidden="true">
+            <img class="logo-loader__base" src="bbll logo.png" alt="">
+            <div class="logo-loader__fill-wrap">
+                <img class="logo-loader__fill" src="bbll logo.png" alt="">
+                <span class="logo-loader__shine"></span>
+            </div>
+        </div>
+        <h2>Cargando</h2>
+        <div class="loading-bar" aria-hidden="true">
+            <span></span>
+        </div>
     </div>
 
     <script>
-        // Redirigir a index.html tras 3 segundos (3000 milisegundos)
-        setTimeout(function() {
+        setTimeout(function () {
             window.location.href = "index.html";
         }, 3000);
     </script>
-
 </body>
 </html>

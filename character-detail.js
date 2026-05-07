@@ -73,7 +73,6 @@ function buildRelatedCards(activeSlug) {
                 <div class="detail-related__copy">
                     <span>${character.role}</span>
                     <strong>${character.name}</strong>
-                    <p>${character.tagline}</p>
                 </div>
             </a>
         `).join('');
@@ -103,7 +102,6 @@ function renderCharacterDetail(character, index) {
                 <p class="detail-eyebrow">BLUE LOCK FILE ${padDetailNumber(index + 1)}</p>
                 <span class="detail-role-pill">${character.role}</span>
                 <h1 class="detail-title">${character.name}</h1>
-                <p class="detail-tagline">${character.tagline}</p>
                 <blockquote class="detail-quote">"${character.quote}"</blockquote>
 
                 <div class="detail-actions">

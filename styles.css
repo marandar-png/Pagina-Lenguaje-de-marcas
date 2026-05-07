@@ -1071,26 +1071,6 @@ h2.reveal-text.secondary {
     text-transform: uppercase;
 }
 
-.character-slide__catch {
-    display: block;
-    margin-bottom: 0.75rem;
-    font-weight: 400;
-}
-
-.character-slide__catch-text {
-    width: fit-content;
-    display: block;
-    position: relative;
-    margin-bottom: 0.15rem;
-    padding: 0.5rem 0.7rem 0.42rem;
-    background: rgba(0, 13, 34, 0.92);
-    color: #ffffff;
-    font-size: clamp(0.92rem, 1.5vw, 1.26rem);
-    line-height: 1;
-    letter-spacing: 0.12rem;
-    text-transform: uppercase;
-}
-
 .character-slide__title {
     display: block;
     margin-bottom: 0.7rem;
@@ -1152,7 +1132,6 @@ h2.reveal-text.secondary {
     outline-offset: -8px;
 }
 
-.character-slide__catch-word,
 .character-slide__title-word,
 .character-slide__voice-word {
     display: inline-block;
@@ -1212,15 +1191,10 @@ h2.reveal-text.secondary {
     opacity: 0;
 }
 
-.characters-swiper .swiper-slide.is-current .character-slide__catch-word,
 .characters-swiper .swiper-slide.is-current .character-slide__title-word,
 .characters-swiper .swiper-slide.is-current .character-slide__voice-word {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-}
-
-.characters-swiper .swiper-slide.is-current .character-slide__catch-word {
-    transition-delay: calc(0.03s + (var(--char-delay) * 0.008s));
 }
 
 .characters-swiper .swiper-slide.is-current .character-slide__title-word {
@@ -1395,11 +1369,6 @@ h2.reveal-text.secondary {
         padding: 0.24rem 0.5rem;
         font-size: 0.7rem;
         letter-spacing: 0.12rem;
-    }
-
-    .character-slide__catch-text {
-        padding: 0.34rem 0.45rem 0.26rem;
-        letter-spacing: 0.08rem;
     }
 
     .character-slide__title {
@@ -2082,13 +2051,6 @@ body.character-detail-page {
     text-transform: uppercase;
 }
 
-.detail-tagline {
-    max-width: 38rem;
-    margin-bottom: 1.5rem;
-    color: rgba(232, 241, 255, 0.9);
-    font-size: 1.05rem;
-}
-
 .detail-quote {
     margin-bottom: 1.8rem;
     padding-left: 1rem;
@@ -2494,11 +2456,6 @@ body.character-detail-page {
     text-transform: uppercase;
 }
 
-.detail-related__copy p {
-    color: rgba(235, 242, 255, 0.78);
-    font-size: 0.84rem;
-}
-
 .detail-empty {
     padding: 2rem;
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -2575,7 +2532,6 @@ body.character-detail-page {
         font-size: 2rem;
     }
 
-    .detail-tagline,
     .detail-quote,
     .detail-copy,
     .detail-bullet-list li,

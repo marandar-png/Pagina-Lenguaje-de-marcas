@@ -2,7 +2,7 @@ window.charactersData = [
     {
         slug: "isagi",
         name: "Yoichi Isagi",
-        role: "Spatial Striker",
+        role: "Delantero espacial",
         catchLines: ["VISION BREAKS", "THE LOCK"],
         voice: "JP Voice: Kazuki Ura",
         image: "images/isagi.webp",
@@ -42,7 +42,7 @@ window.charactersData = [
     {
         slug: "nagi",
         name: "Seishiro Nagi",
-        role: "Trap Genius",
+        role: "Genio perezoso",
         catchLines: ["EFFORTLESS.", "DEADLY. COLD."],
         voice: "JP Voice: Nobunaga Shimazaki",
         image: "images/nagi.webp",
@@ -82,7 +82,7 @@ window.charactersData = [
     {
         slug: "bachira",
         name: "Meguru Bachira",
-        role: "Dribble Monster",
+        role: "Monstruo del regate",
         catchLines: ["PLAY WITH THE", "MONSTER INSIDE"],
         voice: "JP Voice: Tasuku Kaito",
         image: "images/bachira.webp",
@@ -122,7 +122,7 @@ window.charactersData = [
     {
         slug: "chigiri",
         name: "Hyoma Chigiri",
-        role: "Speed Runner",
+        role: "Princesa veloz",
         catchLines: ["BLAZING PAST", "EVERY DEFENDER"],
         voice: "JP Voice: Soma Saito",
         image: "images/chigiri.webp",
@@ -162,7 +162,7 @@ window.charactersData = [
     {
         slug: "barou",
         name: "Shoei Barou",
-        role: "King Striker",
+        role: "El rey delantero",
         catchLines: ["THE FIELD BOWS", "TO THE KING"],
         voice: "JP Voice: Junichi Suwabe",
         image: "images/baro.webp",
@@ -202,7 +202,7 @@ window.charactersData = [
     {
         slug: "rin",
         name: "Rin Itoshi",
-        role: "Precision Killer",
+        role: "Asesino de precision",
         catchLines: ["EVERY ANGLE", "IS A WEAPON"],
         voice: "JP Voice: Koki Uchiyama",
         image: "images/rin.webp",
@@ -242,7 +242,7 @@ window.charactersData = [
     {
         slug: "reo",
         name: "Reo Mikage",
-        role: "Copy Specialist",
+        role: "Especialista en copias",
         catchLines: ["PERFECT TALENT", "BUILDS CONTROL"],
         voice: "JP Voice: Yuma Uchida",
         image: "images/reo.webp",
@@ -282,7 +282,7 @@ window.charactersData = [
     {
         slug: "hiori",
         name: "Hiori Yo",
-        role: "Creative Playmaker",
+        role: "Creador de juego",
         catchLines: ["THREAD THE PASS", "BREAK THE LINE"],
         voice: "JP Voice: Natsuki Hanae",
         image: "images/hiori.webp",
@@ -322,7 +322,7 @@ window.charactersData = [
     {
         slug: "aiku",
         name: "Oliver Aiku",
-        role: "Iron Wall Captain",
+        role: "Capitan del muro de hierro",
         catchLines: ["READ THE GAME", "RULE THE BACKLINE"],
         voice: "JP Voice: Satoshi Hino",
         image: "images/aiku.webp",
@@ -362,7 +362,7 @@ window.charactersData = [
     {
         slug: "shidou",
         name: "Ryusei Shidou",
-        role: "Chaos Finisher",
+        role: "Demonio del caos",
         catchLines: ["WILD INSTINCT", "PURE EXPLOSION"],
         voice: "JP Voice: Yuichi Nakamura",
         image: "images/shidou.webp",
@@ -402,7 +402,7 @@ window.charactersData = [
     {
         slug: "sae",
         name: "Sae Itoshi",
-        role: "World Class Midfielder",
+        role: "Centrocampista de clase mundial",
         catchLines: ["VISION SETS", "THE WHOLE GAME"],
         voice: "JP Voice: Takahiro Sakurai",
         image: "images/sae.webp",

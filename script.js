@@ -473,13 +473,6 @@ function buildCharacterSlide(character, index) {
                 <div class="character-slide__content">
                     <div class="character-slide__inner">
                         <span class="character-slide__meta">${character.role}</span>
-                        <p class="character-slide__catch">
-                            ${buildAnimatedLines(
-                                character.catchLines,
-                                'character-slide__catch-text',
-                                'character-slide__catch-word'
-                            )}
-                        </p>
                         <h4 class="character-slide__title">
                             ${buildAnimatedLines(
                                 nameLines,

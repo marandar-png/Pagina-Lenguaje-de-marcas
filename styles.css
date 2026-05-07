@@ -187,6 +187,7 @@ main {
     left: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     background: transparent;
     border-left: none;
     padding: 0;
@@ -264,6 +265,11 @@ main {
     z-index: 0;
 }
 
+.mobile-menu.is-compact .mobile-menu__cover {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+}
+
 .mobile-menu__cover::before {
     content: "";
     position: absolute;
@@ -307,6 +313,7 @@ main {
 
 .mobile-menu.is-compact .mobile-menu__cover-cell::before,
 .mobile-menu.is-compact .mobile-menu__cover-cell::after {
+    transition-delay: var(--compact-delay);
     transition-duration: 0.16s;
 }
 
@@ -372,7 +379,7 @@ main {
     opacity: 1;
 }
 
-.mobile-menu.is-compact .mobile-menu__cover-cell:nth-child(n + 33) {
+.mobile-menu.is-compact .mobile-menu__cover-cell:nth-child(n + 55) {
     display: none;
 }
 
@@ -403,6 +410,8 @@ main {
     gap: 0.65rem;
     padding: 6rem 2rem 3rem;
     text-align: center;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .mobile-menu__content a {
@@ -420,6 +429,7 @@ main {
     overflow: hidden;
     opacity: 0;
     transform: translateX(28px);
+    line-height: 1.1;
 }
 
 .mobile-menu__content a::after {
@@ -1465,81 +1475,6 @@ h2.reveal-text.secondary {
     }
 }
 
-/* Age Verification */
-.age-check {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 102, 255, 0.2);
-    backdrop-filter: blur(10px);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-}
-
-.age-check.active {
-    display: flex;
-}
-
-.age-check-content {
-    text-align: center;
-    padding: 2rem;
-    border: 2px solid var(--accent-red);
-    background: rgba(255, 255, 255, 0.95);
-    max-width: 400px;
-}
-
-.age-check-content h3 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.age-check-content p {
-    margin-bottom: 1.5rem;
-    color: #333333;
-}
-
-.age-input-group {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.age-input-group input {
-    flex: 1;
-    padding: 0.8rem;
-    background: transparent;
-    border: 2px solid var(--accent-red);
-    color: #0066ff;
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
-}
-
-.age-input-group input::placeholder {
-    color: rgba(0, 102, 255, 0.3);
-}
-
-.confirm-btn {
-    padding: 0.8rem 1.5rem;
-    background: var(--accent-red);
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-    font-family: 'Space Mono', monospace;
-    transition: all 0.3s ease;
-}
-
-.confirm-btn:hover {
-    opacity: 0.8;
-}
-
 /* Footer */
 .footer {
     background: rgba(255, 255, 255, 0.95);
@@ -1576,8 +1511,9 @@ h2.reveal-text.secondary {
     font-size: 0.9rem;
 }
 
-/* User Registration Panel */
-.registration-panel {
+/* User Authentication Panels */
+.registration-panel,
+.login-panel {
     position: fixed;
     top: 70px;
     right: 20px;
@@ -1594,11 +1530,13 @@ h2.reveal-text.secondary {
     will-change: transform;
 }
 
-.registration-panel.active {
+.registration-panel.active,
+.login-panel.active {
     transform: translateX(0);
 }
 
-.registration-toggle {
+.registration-toggle,
+.login-toggle {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -1613,16 +1551,19 @@ h2.reveal-text.secondary {
     z-index: 102;
 }
 
-.registration-toggle:hover {
+.registration-toggle:hover,
+.login-toggle:hover {
     color: var(--accent-red);
 }
 
-.registration-content {
+.registration-content,
+.login-content {
     padding: 2rem 1.5rem;
     padding-top: 2.5rem;
 }
 
-.registration-content h4 {
+.registration-content h4,
+.login-content h4 {
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #0066ff;
@@ -1631,7 +1572,8 @@ h2.reveal-text.secondary {
     font-size: 1rem;
 }
 
-.registration-form {
+.registration-form,
+.login-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -1640,6 +1582,15 @@ h2.reveal-text.secondary {
 .form-group {
     display: flex;
     flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    color: #0066ff;
+    font-size: 0.72rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .form-group input {
@@ -1664,7 +1615,8 @@ h2.reveal-text.secondary {
     color: rgba(0, 102, 255, 0.5);
 }
 
-.register-btn {
+.register-btn,
+.login-btn {
     padding: 0.9rem;
     background: var(--accent-red);
     color: white;
@@ -1679,17 +1631,26 @@ h2.reveal-text.secondary {
     border-radius: 4px;
 }
 
-.register-btn:hover {
+.register-btn:hover,
+.login-btn:hover {
     background: transparent;
     color: var(--accent-red);
     box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
 }
 
-.register-btn:active {
+.register-btn:active,
+.login-btn:active {
     transform: scale(0.98);
 }
 
-.registration-message {
+.register-btn:disabled,
+.login-btn:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.registration-message,
+.login-message {
     margin-top: 1rem;
     padding: 0.8rem;
     border-radius: 4px;
@@ -1700,14 +1661,16 @@ h2.reveal-text.secondary {
     animation: slideIn 0.3s ease;
 }
 
-.registration-message.success {
+.registration-message.success,
+.login-message.success {
     background: rgba(34, 197, 94, 0.15);
     color: #22c55e;
     border: 1px solid #22c55e;
     display: block;
 }
 
-.registration-message.error {
+.registration-message.error,
+.login-message.error {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border: 1px solid #ef4444;
@@ -1725,13 +1688,15 @@ h2.reveal-text.secondary {
     }
 }
 
-/* Register Menu Link */
-.register-menu-link {
+/* Auth Menu Links */
+.register-menu-link,
+.login-menu-link {
     color: #0066ff;
     font-weight: bold;
 }
 
-.register-menu-link:hover {
+.register-menu-link:hover,
+.login-menu-link:hover {
     color: var(--accent-red);
 }
 
@@ -1860,15 +1825,8 @@ h2.reveal-text.secondary {
         width: 100%;
     }
 
-    .age-input-group {
-        flex-direction: column;
-    }
-
-    .confirm-btn {
-        width: 100%;
-    }
-
-    .registration-panel {
+    .registration-panel,
+    .login-panel {
         width: 95%;
         max-width: 280px;
         right: 2.5%;
@@ -1885,18 +1843,54 @@ h2.reveal-text.secondary {
     }
 
     .mobile-menu__content {
-        padding: 5.5rem 1.25rem 2rem;
-        gap: 0.45rem;
+        justify-content: center;
+        padding: clamp(4.75rem, 12vh, 5.5rem) 1rem 1.25rem;
+        gap: clamp(0.25rem, 1vh, 0.45rem);
     }
 
     .mobile-menu__content a {
         width: min(92vw, 520px);
-        font-size: clamp(1.15rem, 6vw, 1.9rem);
-        padding: 0.95rem 0.75rem;
+        font-size: clamp(0.95rem, 5.2vw, 1.65rem);
+        padding: clamp(0.58rem, 2vh, 0.85rem) 0.75rem;
+        letter-spacing: 0.16em;
     }
 }
 
 @media (max-width: 480px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 0.85rem;
+        gap: 0.5rem;
+        letter-spacing: 1px;
+    }
+
+    .logo-img {
+        height: 32px;
+        max-width: 38px;
+    }
+
+    .menu-btn {
+        min-width: 76px;
+        height: 38px;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.72rem;
+    }
+
+    .mobile-menu__content {
+        padding: clamp(4.25rem, 11vh, 5rem) 0.75rem 1rem;
+        gap: clamp(0.15rem, 0.8vh, 0.35rem);
+    }
+
+    .mobile-menu__content a {
+        width: min(94vw, 420px);
+        font-size: clamp(0.85rem, 4.8vw, 1.35rem);
+        padding: clamp(0.48rem, 1.7vh, 0.72rem) 0.6rem;
+        letter-spacing: 0.13em;
+    }
+
     .hero {
         padding: 88px 1rem 2rem;
     }
@@ -1939,7 +1933,8 @@ h2.reveal-text.secondary {
         gap: 0.75rem;
     }
 
-    .registration-panel {
+    .registration-panel,
+    .login-panel {
         top: 72px;
         left: 1rem;
         right: 1rem;
@@ -1948,6 +1943,24 @@ h2.reveal-text.secondary {
         transform: translateX(calc(100% + 1.5rem));
     }
 
+    .registration-panel.active,
+    .login-panel.active {
+        transform: translateX(0);
+    }
+
+}
+
+@media (max-width: 768px) and (max-height: 640px) {
+    .mobile-menu__content {
+        justify-content: flex-start;
+        padding-top: 4.35rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .mobile-menu__content a {
+        font-size: clamp(0.78rem, 4.2vw, 1.05rem);
+        padding: 0.42rem 0.55rem;
+    }
 }
 
 /* Character Detail Page */

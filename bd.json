@@ -1,3 +1,22 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "d0f09eeb-e0ea-4cc9-916c-e71527c94f01",
+      "username": "s",
+      "email": "s@gmail.com",
+      "passwordHash": "232cc92edc46b9556442da6fe553acd48f923bd6f7f5343face23b92d1587d0fd47a2a7ac1741639e8c95b15e85c02e27ee9a177b32d0f0bf9fbbdf44807746b",
+      "passwordSalt": "8f7af91299a1c1feb8d33148fd8ed46c",
+      "age": 18,
+      "registeredAt": "2026-05-06T19:30:17.082Z"
+    },
+    {
+      "id": "eb0dc931-c157-4fe1-95c5-d9a2a5c67897",
+      "username": "miguel",
+      "email": "m@gmail.com",
+      "passwordHash": "6406f64fad85d3ffdeff9cf78f573a3aaf06c89843a7da50dd5fa5d1bd72be24a58d026c1725a0eaf22a3224575d190cb83d165a5c16461e52e8a8f249e2dc04",
+      "passwordSalt": "6f64f960da8af963dfe1cb10c57fd0a7",
+      "age": 18,
+      "registeredAt": "2026-05-06T19:46:58.590Z"
+    }
+  ]
 }

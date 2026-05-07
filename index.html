@@ -39,29 +39,54 @@
             <a href="#spec">SPEC</a>
             <a href="#characters">CHARACTERS</a>
             <a href="#" id="registerMenuLink" class="register-menu-link">REGISTER</a>
+            <a href="#" id="loginMenuLink" class="login-menu-link">LOGIN</a>
         </div>
     </div>
 
     <!-- User Registration Panel -->
-    <div class="registration-panel" id="registrationPanel">
-        <button class="registration-toggle" id="registrationToggle">✕</button>
+    <div class="registration-panel" id="registrationPanel" aria-hidden="true">
+        <button class="registration-toggle" id="registrationToggle" type="button" aria-label="Close registration form">&times;</button>
         <div class="registration-content">
             <h4>REGISTER</h4>
             <form id="registrationForm" class="registration-form">
                 <div class="form-group">
-                    <input type="text" id="username" placeholder="Username" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Username" autocomplete="username" required>
                 </div>
                 <div class="form-group">
-                    <input type="email" id="email" placeholder="Email" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Email" autocomplete="email" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" minlength="6" required>
                 </div>
                 <div class="form-group">
-                    <input type="number" id="age" placeholder="Age" min="18" required>
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" placeholder="Age" min="18" required>
                 </div>
                 <button type="submit" class="register-btn">SIGN UP</button>
                 <div id="registrationMessage" class="registration-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Login Panel -->
+    <div class="login-panel" id="loginPanel" aria-hidden="true">
+        <button class="login-toggle" id="loginToggle" type="button" aria-label="Close login form">&times;</button>
+        <div class="login-content">
+            <h4>LOGIN</h4>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="Email" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Password" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="login-btn">LOGIN</button>
+                <div id="loginMessage" class="login-message"></div>
             </form>
         </div>
     </div>
@@ -167,17 +192,6 @@
                             <span class="characters-nav__icon" aria-hidden="true"></span>
                         </button>
                     </div>
-                </div>
-            </div>
-        </section>
-        <!-- Age Verification -->
-        <section class="age-check" id="ageModal">
-            <div class="age-check-content">
-                <h3>Age Verification</h3>
-                <p>Please confirm you are 18 or older</p>
-                <div class="age-input-group">
-                    <input type="number" id="ageInput" placeholder="Enter your age" min="0" max="150">
-                    <button id="ageConfirm" class="confirm-btn">CONFIRM</button>
                 </div>
             </div>
         </section>

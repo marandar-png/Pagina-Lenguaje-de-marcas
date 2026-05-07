@@ -7,14 +7,26 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["game", "website"],
+  "keywords": [
+    "game",
+    "website"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.6",
+    "express": "^4.22.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marandar-png/Pagina-Lenguaje-de-marcas.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/marandar-png/Pagina-Lenguaje-de-marcas/issues"
+  },
+  "homepage": "https://github.com/marandar-png/Pagina-Lenguaje-de-marcas#readme"
 }

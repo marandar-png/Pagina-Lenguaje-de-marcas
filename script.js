@@ -41,6 +41,14 @@ let isMenuOpen = false;
 let isMenuAnimating = false;
 let menuInteractionLockedUntil = 0;
 
+function getVisibleMenuLinks() {
+    return Array.from(document.querySelectorAll('.mobile-menu a')).filter((link) => link.style.display !== 'none');
+}
+
+function getMenuLinkCharacters() {
+    return getVisibleMenuLinks().flatMap((link) => Array.from(link.querySelectorAll('.menu-link-char')));
+}
+
 function usesCompactMenuEffects() {
     return compactMenuMedia.matches;
 }
@@ -57,14 +65,17 @@ function buildMenuCoverGrid() {
     if (!menuCover || menuCover.children.length > 0) return;
 
     const fragment = document.createDocumentFragment();
-    const columns = usesCompactMenuEffects() ? 6 : 10;
-    const rows = usesCompactMenuEffects() ? 9 : 15;
+    const columns = 10;
+    const rows = 15;
 
     for (let row = 0; row < rows; row += 1) {
         for (let col = 0; col < columns; col += 1) {
+            const index = row * columns + col;
+            const compactRow = Math.floor(index / 6);
             const cell = document.createElement('span');
             cell.className = 'mobile-menu__cover-cell';
-            cell.style.setProperty('--delay', `${usesCompactMenuEffects() ? 0.08 + row * 0.018 : 0.2 + row * 0.025}s`);
+            cell.style.setProperty('--delay', `${0.2 + row * 0.025}s`);
+            cell.style.setProperty('--compact-delay', `${0.08 + compactRow * 0.018}s`);
             fragment.appendChild(cell);
         }
     }
@@ -101,18 +112,24 @@ function syncMenuButton() {
 }
 
 function resetMenuAnimatedState() {
+    const visibleLinks = getVisibleMenuLinks();
+    const visibleChars = getMenuLinkCharacters();
+
     gsap.set(menuBackground, { clearProps: 'opacity' });
     gsap.set(menuContent, { clearProps: 'opacity,transform' });
-    gsap.set('.mobile-menu a', { clearProps: 'opacity,transform' });
-    gsap.set('.menu-link-char', { clearProps: 'opacity,transform' });
+    gsap.set(visibleLinks, { clearProps: 'opacity,transform' });
+    gsap.set(visibleChars, { clearProps: 'opacity,transform' });
     gsap.set(mobileMenu, { clearProps: 'opacity,transform' });
 }
 
 function createMenuTransition(isOpening) {
     if (menuTimeline) menuTimeline.kill();
-    gsap.killTweensOf([mobileMenu, menuBackground, menuContent, '.mobile-menu a', '.menu-link-char', menuBtn]);
 
     const compactEffects = usesCompactMenuEffects();
+    const visibleLinks = getVisibleMenuLinks();
+    const visibleChars = getMenuLinkCharacters();
+
+    gsap.killTweensOf([mobileMenu, menuBackground, menuContent, menuBtn, ...visibleLinks, ...visibleChars]);
 
     if (isOpening) {
         document.body.classList.add('menu-open');
@@ -129,8 +146,8 @@ function createMenuTransition(isOpening) {
             opacity: 1,
             yPercent: compactEffects ? -1.5 : -2.5
         });
-        gsap.set('.mobile-menu a', { opacity: 0, x: compactEffects ? 16 : 24 });
-        gsap.set('.menu-link-char', { opacity: 0, y: compactEffects ? 10 : 16 });
+        gsap.set(visibleLinks, { opacity: 0, x: compactEffects ? 16 : 24 });
+        gsap.set(visibleChars, { opacity: 0, y: compactEffects ? 10 : 16 });
 
         menuTimeline = gsap.timeline({
             defaults: { ease: 'power3.out' },
@@ -157,7 +174,7 @@ function createMenuTransition(isOpening) {
                 duration: compactEffects ? 0.24 : 0.34,
                 ease: compactEffects ? 'power2.out' : 'expo.out'
             }, 0)
-            .fromTo('.mobile-menu a', {
+            .fromTo(visibleLinks, {
                 opacity: 0,
                 x: compactEffects ? 16 : 24
             }, {
@@ -167,7 +184,7 @@ function createMenuTransition(isOpening) {
                 duration: compactEffects ? 0.26 : 0.34,
                 ease: 'power3.out'
             }, compactEffects ? 0.05 : 0.1)
-            .to('.menu-link-char', {
+            .to(visibleChars, {
                 opacity: 1,
                 y: 0,
                 stagger: compactEffects ? 0.008 : 0.012,
@@ -190,7 +207,7 @@ function createMenuTransition(isOpening) {
     });
 
     menuTimeline
-        .to('.menu-link-char', {
+        .to(visibleChars, {
             opacity: 0,
             y: 12,
             stagger: {
@@ -199,7 +216,7 @@ function createMenuTransition(isOpening) {
             },
             duration: compactEffects ? 0.12 : 0.18
         }, 0)
-        .to('.mobile-menu a', {
+        .to(visibleLinks, {
             opacity: 0,
             x: compactEffects ? 14 : 20,
             stagger: {
@@ -631,51 +648,6 @@ function renderCharactersSection() {
 
 renderCharactersSection();
 
-// ===== Age Verification =====
-const ageModal = document.getElementById('ageModal');
-const ageInput = document.getElementById('ageInput');
-const ageConfirm = document.getElementById('ageConfirm');
-const minAge = 13;
-
-function checkAge() {
-    const age = parseInt(ageInput.value);
-    
-    if (isNaN(age) || age < 0 || age > 150) {
-        alert('Please enter a valid age');
-        return;
-    }
-    
-    if (age >= minAge) {
-        gsap.to('.age-check-content', {
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.4,
-            onComplete: () => {
-                localStorage.setItem('ageVerified', 'true');
-                ageModal.classList.remove('active');
-            }
-        });
-    } else {
-        alert(`You must be at least ${minAge} years old to access this content.`);
-    }
-}
-
-ageConfirm.addEventListener('click', checkAge);
-ageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') checkAge();
-});
-
-// Show age verification on first visit with animation
-if (!localStorage.getItem('ageVerified')) {
-    ageModal.classList.add('active');
-    gsap.from('.age-check-content', {
-        scale: 0.8,
-        opacity: 0,
-        duration: 0.6,
-        ease: "back.out"
-    });
-}
-
 // ===== Scroll Animations =====
 // Spec items animation with alternating direction
 gsap.utils.toArray(".spec-item").forEach((item, index) => {
@@ -863,31 +835,183 @@ const registrationToggle = document.getElementById('registrationToggle');
 const registrationForm = document.getElementById('registrationForm');
 const registrationMessage = document.getElementById('registrationMessage');
 const registerMenuLink = document.getElementById('registerMenuLink');
+const registerSubmitButton = registrationForm ? registrationForm.querySelector('.register-btn') : null;
+const usernameInput = document.getElementById('username');
+const loginPanel = document.getElementById('loginPanel');
+const loginToggle = document.getElementById('loginToggle');
+const loginForm = document.getElementById('loginForm');
+const loginMessage = document.getElementById('loginMessage');
+const loginMenuLink = document.getElementById('loginMenuLink');
+const loginSubmitButton = loginForm ? loginForm.querySelector('.login-btn') : null;
+const loginEmailInput = document.getElementById('loginEmail');
+const apiBaseUrl = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
 
-// Open Registration Panel from Menu
-registerMenuLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    closeMenu();
-    registrationPanel.classList.add('active');
-    gsap.from(registrationPanel, {
-        x: 350,
-        opacity: 0,
-        duration: 0.4,
-        ease: "power3.out"
+function setAuthMenuLabel(link, label) {
+    if (!link) return;
+
+    link.dataset.label = label;
+    link.setAttribute('aria-label', label);
+    link.innerHTML = '';
+
+    const labelWrapper = document.createElement('span');
+    labelWrapper.className = 'menu-link-label';
+
+    [...label].forEach((char) => {
+        const span = document.createElement('span');
+        span.className = 'menu-link-char';
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        labelWrapper.appendChild(span);
     });
-    document.getElementById('username').focus();
-});
 
-registrationToggle.addEventListener('click', () => {
+    link.appendChild(labelWrapper);
+}
+
+function getLoggedUser() {
+    try {
+        return JSON.parse(localStorage.getItem('loggedUser'));
+    } catch (error) {
+        return null;
+    }
+}
+
+function setLoggedUser(user) {
+    localStorage.setItem('loggedUser', JSON.stringify(user));
+    syncAuthMenuState();
+}
+
+function logoutUser() {
+    localStorage.removeItem('loggedUser');
+    syncAuthMenuState();
+    showLoginMessage('Sesion cerrada', 'success');
+}
+
+function syncAuthMenuState() {
+    const user = getLoggedUser();
+
+    if (loginMenuLink) {
+        setAuthMenuLabel(loginMenuLink, user ? 'LOGOUT' : 'LOGIN');
+    }
+
+    if (registerMenuLink) {
+        registerMenuLink.style.display = user ? 'none' : '';
+    }
+}
+
+function openRegistrationPanel() {
+    if (!registrationPanel) return;
+
+    closeLoginPanel();
+    registrationPanel.classList.add('active');
+    registrationPanel.setAttribute('aria-hidden', 'false');
+
+    gsap.fromTo(registrationPanel, {
+        x: 350,
+        opacity: 0
+    }, {
+        x: 0,
+        opacity: 1,
+        duration: 0.35,
+        ease: "power3.out",
+        clearProps: "x,opacity"
+    });
+
+    if (usernameInput) {
+        usernameInput.focus();
+    }
+}
+
+function closeRegistrationPanel() {
+    if (!registrationPanel || !registrationPanel.classList.contains('active')) return;
+
     gsap.to(registrationPanel, {
         x: 350,
         opacity: 0,
-        duration: 0.3,
+        duration: 0.25,
         ease: "power3.in",
         onComplete: () => {
             registrationPanel.classList.remove('active');
+            registrationPanel.setAttribute('aria-hidden', 'true');
+            gsap.set(registrationPanel, { clearProps: "x,opacity" });
+
         }
     });
+}
+
+function openLoginPanel() {
+    if (!loginPanel) return;
+
+    closeRegistrationPanel();
+    loginPanel.classList.add('active');
+    loginPanel.setAttribute('aria-hidden', 'false');
+
+    gsap.fromTo(loginPanel, {
+        x: 350,
+        opacity: 0
+    }, {
+        x: 0,
+        opacity: 1,
+        duration: 0.35,
+        ease: "power3.out",
+        clearProps: "x,opacity"
+    });
+
+    if (loginEmailInput) {
+        loginEmailInput.focus();
+    }
+}
+
+function closeLoginPanel() {
+    if (!loginPanel || !loginPanel.classList.contains('active')) return;
+
+    gsap.to(loginPanel, {
+        x: 350,
+        opacity: 0,
+        duration: 0.25,
+        ease: "power3.in",
+        onComplete: () => {
+            loginPanel.classList.remove('active');
+            loginPanel.setAttribute('aria-hidden', 'true');
+            gsap.set(loginPanel, { clearProps: "x,opacity" });
+        }
+    });
+}
+
+if (registerMenuLink) {
+    registerMenuLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMenu();
+        openRegistrationPanel();
+    });
+}
+
+if (loginMenuLink) {
+    loginMenuLink.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (getLoggedUser()) {
+            logoutUser();
+            closeMenu();
+            return;
+        }
+
+        closeMenu();
+        openLoginPanel();
+    });
+}
+
+if (registrationToggle) {
+    registrationToggle.addEventListener('click', closeRegistrationPanel);
+}
+
+if (loginToggle) {
+    loginToggle.addEventListener('click', closeLoginPanel);
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeRegistrationPanel();
+        closeLoginPanel();
+    }
 });
 
 // Handle Registration Form Submission
@@ -906,13 +1030,23 @@ registrationForm.addEventListener('submit', async (e) => {
     }
 
     if (age < 18) {
-        showRegistrationMessage('Debes tener 18 años o más', 'error');
+        showRegistrationMessage('Debes tener 18 anos o mas', 'error');
+        return;
+    }
+
+    if (password.length < 6) {
+        showRegistrationMessage('La password debe tener al menos 6 caracteres', 'error');
         return;
     }
 
     // Intentar registrar al usuario
     try {
-        const response = await fetch('http://localhost:3000/api/register', {
+        if (registerSubmitButton) {
+            registerSubmitButton.disabled = true;
+            registerSubmitButton.textContent = 'SENDING...';
+        }
+
+        const response = await fetch(`${apiBaseUrl}/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -927,31 +1061,92 @@ registrationForm.addEventListener('submit', async (e) => {
 
         const data = await response.json();
 
+        if (!response.ok) {
+            showRegistrationMessage(data.message || 'Error en el registro', 'error');
+            return;
+        }
+
         if (data.success) {
-            showRegistrationMessage('¡Registrado exitosamente! 🎉', 'success');
+            showRegistrationMessage('Registrado exitosamente', 'success');
+            setLoggedUser(data.user);
             
             // Limpiar formulario
             registrationForm.reset();
             
             // Cerrar panel después de 2 segundos
             setTimeout(() => {
-                gsap.to(registrationPanel, {
-                    x: 350,
-                    opacity: 0,
-                    duration: 0.3,
-                    ease: "power3.in",
-                    onComplete: () => {
-                        registrationPanel.classList.remove('active');
-                        registrationMessage.classList.remove('success');
-                    }
-                });
+                closeRegistrationPanel();
+                registrationMessage.className = 'registration-message';
             }, 2000);
         } else {
             showRegistrationMessage(data.message || 'Error en el registro', 'error');
         }
     } catch (error) {
         console.error('Error:', error);
-        showRegistrationMessage('Error de conexión. Asegúrate de que el servidor está ejecutándose.', 'error');
+        showRegistrationMessage('Error de conexion. Asegurate de que el servidor esta ejecutandose.', 'error');
+    } finally {
+        if (registerSubmitButton) {
+            registerSubmitButton.disabled = false;
+            registerSubmitButton.textContent = 'SIGN UP';
+        }
+    }
+});
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+        showLoginMessage('Introduce email y password', 'error');
+        return;
+    }
+
+    try {
+        if (loginSubmitButton) {
+            loginSubmitButton.disabled = true;
+            loginSubmitButton.textContent = 'CHECKING...';
+        }
+
+        const response = await fetch(`${apiBaseUrl}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showLoginMessage(data.message || 'Error al iniciar sesion', 'error');
+            return;
+        }
+
+        if (data.success) {
+            setLoggedUser(data.user);
+            showLoginMessage(`Bienvenido, ${data.user.username}`, 'success');
+            loginForm.reset();
+
+            setTimeout(() => {
+                closeLoginPanel();
+                loginMessage.className = 'login-message';
+            }, 1600);
+        } else {
+            showLoginMessage(data.message || 'Error al iniciar sesion', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showLoginMessage('Error de conexion. Asegurate de que el servidor esta ejecutandose.', 'error');
+    } finally {
+        if (loginSubmitButton) {
+            loginSubmitButton.disabled = false;
+            loginSubmitButton.textContent = 'LOGIN';
+        }
     }
 });
 
@@ -965,3 +1160,18 @@ function showRegistrationMessage(message, type) {
         duration: 0.3
     });
 }
+
+function showLoginMessage(message, type) {
+    if (!loginMessage) return;
+
+    loginMessage.textContent = message;
+    loginMessage.className = `login-message ${type}`;
+
+    gsap.from(loginMessage, {
+        opacity: 0,
+        y: -10,
+        duration: 0.3
+    });
+}
+
+syncAuthMenuState();
